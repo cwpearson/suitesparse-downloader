@@ -4,7 +4,12 @@ import sys
 
 import datasets
 
-mats = datasets.ALL_REAL_MATS
+dataset = None
+for ds in datasets.DATASETS:
+    if ds.name == sys.argv[1]:
+        dataset = ds
+        break
+mats = dataset.mats
 
 print(len(mats))
 

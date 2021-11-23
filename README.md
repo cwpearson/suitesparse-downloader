@@ -11,7 +11,7 @@ curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poet
 ```
 source load-env.sh
 poetry run python list.py
-poetry run python download.py
+poetry run python download.py <dataset name>
 ```
 
 ## how this was done
