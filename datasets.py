@@ -6,9 +6,19 @@ Dataset = collections.namedtuple("Dataset", ["name", "mats"])
 
 
 def filter_reject_blacklist(mats):
+
+    # matrices that are actually integer
+    blacklist_integer = [
+        "Almedar",
+        "aug2d",
+        "aug2dc",
+        "aug3d",
+        "mc2depi"
+    ]
+
     filtered = []
     for mat in mats:
-        if mat.name.endswith("_b"):
+        if mat.name in blacklist_integer:
             continue
         filtered += [mat]
     return filtered
