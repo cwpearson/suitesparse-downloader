@@ -14,7 +14,7 @@ mats = dataset.mats
 print(len(mats))
 
 scratchPath = Path(os.environ["SCRATCH"])
-downPath = scratchPath / "suitesparse"
+downPath = scratchPath / dataset.name
 print("ensure", downPath)
 try:
     os.makedirs(downPath)
