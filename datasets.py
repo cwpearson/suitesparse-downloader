@@ -9,16 +9,21 @@ def filter_reject_blacklist(mats):
 
     # matrices that are actually integer
     blacklist_integer = [
-        "Almedar",
+        "Alemdar",
         "aug2d",
         "aug2dc",
         "aug3d",
-        "mc2depi"
+        "cyl6",
+        "engine",
+        "mc2depi",
+        "t520",
+        "tube2"
     ]
 
     filtered = []
     for mat in mats:
         if mat.name in blacklist_integer:
+            print(f"BLACKLIST {mat.name}")
             continue
         filtered += [mat]
     return filtered
