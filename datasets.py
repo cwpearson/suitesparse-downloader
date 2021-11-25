@@ -1,28 +1,17 @@
 import collections
+import sys
 
 import ssgetpy
+
+import lists
 
 Dataset = collections.namedtuple("Dataset", ["name", "mats"])
 
 
 def filter_reject_blacklist(mats):
-
-    # matrices that are actually integer
-    blacklist_integer = [
-        "Alemdar",
-        "aug2d",
-        "aug2dc",
-        "aug3d",
-        "cyl6",
-        "engine",
-        "mc2depi",
-        "t520",
-        "tube2"
-    ]
-
     filtered = []
     for mat in mats:
-        if mat.name in blacklist_integer:
+        if mat.name in lists.INTEGER_MATS:
             print(f"BLACKLIST {mat.name}")
             continue
         filtered += [mat]
@@ -46,7 +35,7 @@ def filter_reject_small(mats):
 
 ## all real-valued matrices
 REAL_MATS = Dataset(
-    name = "all_reals",
+    name = "reals",
     mats = filter_reject_blacklist(ssgetpy.search(
         dtype='real',
         limit=1_000_000

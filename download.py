@@ -22,7 +22,7 @@ def ensure_matrix_link(downDir, linkDir, mat):
     files = os.listdir(downDir / mat.name)
     for f in files:
         if f == mat.name + ".mtx":
-            src = downDir / f
+            src = downDir / mat.name / f
             dst = linkDir / (mat.name + ".mtx")
             print(f"{src} <- {dst}")
             try:
