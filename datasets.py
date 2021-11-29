@@ -7,6 +7,13 @@ import lists
 
 Dataset = collections.namedtuple("Dataset", ["name", "mats"])
 
+def safe_dir_name(s):
+    t = s.strip()
+    t = t.replace(" ", "_")
+    t = t.replace("/", "_")
+    t = t.replace("-", "_")
+    t = t.lower()
+    return t
 
 def filter_reject_blacklist(mats):
     filtered = []
@@ -90,6 +97,12 @@ REAL_MED_MATS = Dataset (
     mats = filter_reject_large(filter_reject_small(REAL_MATS.mats))
 )
 
+
+
+
+
+
+
 ## export all datasets
 DATASETS  = [
     REAL_MATS,
@@ -99,3 +112,29 @@ DATASETS  = [
     REGULAR_REAL_SMALL_MATS,
     REGULAR_REAL_MED_MATS
 ]
+
+def get_kinds():
+    """return set of unique kind fields"""
+
+    mats = ssgetpy.search(
+        limit=1_000_000
+    )
+
+    kinds = set()
+    for mat in mats:
+        kinds.add(mat.kind)
+    print(f"kinds: {kinds}")
+
+    return kinds
+
+for kind in get_kinds():
+        d = Dataset(
+            name = "kind_"+safe_dir_name(kind),
+            mats = filter_reject_blacklist(ssgetpy.search(
+                kind=kind,
+                dtype='real',
+                limit=1_000_000
+            ))
+        )
+        if len(d.mats) > 0:
+            DATASETS += [d]
