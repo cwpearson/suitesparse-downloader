@@ -1,5 +1,5 @@
 import os
-from pathlib import Path
+from pathlib import Path, PurePath
 import sys
 
 import datasets
@@ -17,12 +17,12 @@ def ensure_matrix_download(dir, mat):
         return
     mat.download(format='MM', destpath=dir, extract=True)
 
-# link matrix in downDir to linkDir
+# create a link in linkDir for the matrix in downDir
 def ensure_matrix_link(downDir, linkDir, mat):
     files = os.listdir(downDir / mat.name)
     for f in files:
         if f == mat.name + ".mtx":
-            src = downDir / mat.name / f
+            src = Path(os.path.relpath(downDir, linkDir)) / mat.name / f
             dst = linkDir / (mat.name + ".mtx")
             print(f"{src} <- {dst}")
             try:
