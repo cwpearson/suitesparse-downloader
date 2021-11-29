@@ -22,6 +22,7 @@ def ensure_matrix_link(downDir, linkDir, mat):
     files = os.listdir(downDir / mat.name)
     for f in files:
         if f == mat.name + ".mtx":
+            # os.path.relpath does not require one to be a subpath of the other
             src = Path(os.path.relpath(downDir, linkDir)) / mat.name / f
             dst = linkDir / (mat.name + ".mtx")
             print(f"{src} <- {dst}")
@@ -31,34 +32,32 @@ def ensure_matrix_link(downDir, linkDir, mat):
                 pass # dir already exists
             return
 
-dataset = None
-for ds in datasets.DATASETS:
-    if ds.name == sys.argv[1]:
-        dataset = ds
-        break
-mats = dataset.mats
+def download_dataset(dataset):
+    mats = dataset.mats
 
-print(len(mats))
+    print(len(mats))
 
-# scratch directory
-scratchPath = Path(os.environ["SCRATCH"])
-# where matrices will be downloaded
-downDir = scratchPath / "suitesparse"
-# where the matrix will be linked to
-linkDir = scratchPath / dataset.name
-ensure_dir(downDir)
-ensure_dir(linkDir)
+    # scratch directory
+    scratchPath = Path(os.environ["SCRATCH"])
+    # where matrices will be downloaded
+    downDir = scratchPath / "suitesparse"
+    # where the matrix will be linked to
+    linkDir = scratchPath / dataset.name
+    ensure_dir(downDir)
+    ensure_dir(linkDir)
 
-for mat in mats:
+    for mat in mats:
+        print(mat.name)
+        ensure_matrix_download(downDir, mat)
+        ensure_matrix_link(downDir, linkDir, mat)
 
-    print(mat.name)
-
-    ensure_matrix_download(downDir, mat)
-    ensure_matrix_link(downDir, linkDir, mat)
-
-
-# blacklist:
-# cavity(\d+)_[bx].mtx
-# circuit(\d+)_[bx].mtx
-# other things that end in _b.mtx?
-#
+if "all" == sys.argv[1]:
+    for ds in datasets.DATASETS:
+        download_dataset(ds)
+    sys.exit(0)
+else:
+    dataset = None
+    for ds in datasets.DATASETS:
+        if ds.name == sys.argv[1]:
+            download_dataset(ds)
+            sys.exit(0)
