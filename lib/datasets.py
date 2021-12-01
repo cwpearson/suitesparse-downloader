@@ -3,7 +3,7 @@ import sys
 
 import ssgetpy
 
-import lists
+from lib import lists
 
 Dataset = collections.namedtuple("Dataset", ["name", "mats"])
 
@@ -15,35 +15,30 @@ def safe_dir_name(s):
     t = t.lower()
     return t
 
-def filter_reject_blacklist(mats):
-    filtered = []
-    for mat in mats:
-        if mat.name in lists.INTEGER_MATS:
-            print(f"BLACKLIST {mat.name}")
-            continue
-        filtered += [mat]
-    return filtered
+def mat_is_integer(mat):
+    return mat.name in lists.INTEGER_MATS
+
+def filter_reject_integer(mats):
+    return [mat for mat in mats if not mat_is_integer(mat)]
+
+def mat_is_small(mat):
+    return (mat.rows < 1_000 and mat.cols < 1_000) \
+        or mat.nnz < 20_000
+
+def mat_is_large(mat):
+    return (mat.rows > 1_000_000 and mat.cols < 1_000_000) \
+        or mat.nnz > 20_000_000
 
 def filter_reject_large(mats):
-    filtered = []
-    for mat in mats:
-        if mat.rows > 1_000_000 or mat.cols > 1_000_000 or mat.nnz > 20_000_000:
-            continue
-        filtered += [mat]
-    return filtered
+    return [mat for mat in mats if not mat_is_large(mat)]
 
 def filter_reject_small(mats):
-    filtered = []
-    for mat in mats:
-        if mat.rows < 1_000 or mat.cols < 1_000 or mat.nnz < 20_000:
-            continue
-        filtered += [mat]
-    return filtered
+    return [mat for mat in mats if not mat_is_small(mat)]
 
 ## all real-valued matrices
 REAL_MATS = Dataset(
     name = "reals",
-    mats = filter_reject_blacklist(ssgetpy.search(
+    mats = filter_reject_integer(ssgetpy.search(
         dtype='real',
         limit=1_000_000
     ))
@@ -61,10 +56,7 @@ kinds = [
     "Theoretical/Quantum Chemistry Problem",
     "Thermal Problem",
 ]
-REGULAR_REAL_MATS = Dataset(
-    name = "regular_reals",
-    mats = []
-)
+
 mats = []
 for kind in kinds:
     mats += ssgetpy.search(
@@ -74,7 +66,7 @@ for kind in kinds:
     )
 REGULAR_REAL_MATS = Dataset(
     name="regular_reals",
-    mats = filter_reject_blacklist(mats)
+    mats = filter_reject_integer(mats)
 )
 
 ## keep "small" matrices
@@ -97,12 +89,6 @@ REAL_MED_MATS = Dataset (
     mats = filter_reject_large(filter_reject_small(REAL_MATS.mats))
 )
 
-
-
-
-
-
-
 ## export all datasets
 DATASETS  = [
     REAL_MATS,
@@ -115,26 +101,24 @@ DATASETS  = [
 
 def get_kinds():
     """return set of unique kind fields"""
-
     mats = ssgetpy.search(
         limit=1_000_000
     )
-
     kinds = set()
     for mat in mats:
         kinds.add(mat.kind)
-    print(f"kinds: {kinds}")
-
     return kinds
 
 for kind in get_kinds():
         d = Dataset(
             name = "kind_"+safe_dir_name(kind),
-            mats = filter_reject_blacklist(ssgetpy.search(
+            mats = filter_reject_large( \
+            filter_reject_small( \
+            filter_reject_integer(ssgetpy.search(
                 kind=kind,
                 dtype='real',
                 limit=1_000_000
-            ))
+            ))))
         )
         if len(d.mats) > 0:
             DATASETS += [d]

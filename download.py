@@ -2,7 +2,9 @@ import os
 from pathlib import Path, PurePath
 import sys
 
-import datasets
+from lib import config
+from lib import datasets
+
 
 def ensure_dir(path):
     print("ensure", path)
@@ -13,7 +15,7 @@ def ensure_dir(path):
 
 def ensure_matrix_download(dir, mat):
     if os.path.exists(dir / mat.name / (mat.name + ".mtx")):
-        print(f"SKIP {mat.name}: already exists")
+        # already downloaded
         return
     mat.download(format='MM', destpath=dir, extract=True)
 
@@ -29,7 +31,7 @@ def ensure_matrix_link(downDir, linkDir, mat):
             try:
                 os.symlink(src, dst)
             except FileExistsError:
-                pass # dir already exists
+                pass # symlink already exists
             return
 
 def download_dataset(dataset):
@@ -37,12 +39,10 @@ def download_dataset(dataset):
 
     print(len(mats))
 
-    # scratch directory
-    scratchPath = Path(os.environ["SCRATCH"])
     # where matrices will be downloaded
-    downDir = scratchPath / "suitesparse"
+    downDir = config.DIR / "suitesparse"
     # where the matrix will be linked to
-    linkDir = scratchPath / dataset.name
+    linkDir = config.DIR / dataset.name
     ensure_dir(downDir)
     ensure_dir(linkDir)
 

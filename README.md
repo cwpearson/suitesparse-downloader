@@ -19,6 +19,16 @@ To download all datasets
 poetry run python download.py all
 ```
 
+You can move the datasets due to relative symlinks. For example:
+
+```
+rsync -azvh $SCRATCH/ ~/cfm_m3918/pearson
+```
+
+## how to use (unsupported platform)
+
+set `SS_DIR` environment variable to the directory where you want the dataset folders to be generated.
+
 ## What it does
 
 Downloads subsets of the suitesparse collection to different directories.
