@@ -29,8 +29,8 @@ ensure_ss_index(local)
 mat = scipy.io.loadmat(config.DIR / ".ss_index.mat", squeeze_me=True)
 
 s = mat["ss_index"].item()
-for i,x in enumerate(s):
-    print(i, x)
+# for i,x in enumerate(s):
+#     print(i, x)
 groups = s[1]
 names = s[2]
 # 3 letters, first letter:
