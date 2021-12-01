@@ -37,12 +37,12 @@ Then, a relative symlink is created from the `$SCRATCH/<subset>/<matrix>.mtx` fi
 
 This makes use of a [fork of the `ssgetpy`](github.com/cwpearson/ssgetpy) package with a faster download limit.
 ssgetpy does not discriminate "real" datatype from "integer" datatype, as shown on the suitesparse collection website.
-Therefore, `lists.py` maintains a manually-curated list of `integer` datatype matrices to facilitate discrimination.
+Therefore, we access https://sparse.tamu.edu/files/ss_index.mat to determine that metadata for each file.
 
 ## Transfer data to a different filesystem
 
 ```
-rsync -rzvh --links pearson@cori.nersc.gov:$SS_DIR/ .
+rsync -rzvh --links --info=progress2 pearson@cori.nersc.gov:$SS_DIR/ .
 ```
 
 ## how this was done
