@@ -3,7 +3,7 @@ import sys
 
 import ssgetpy
 
-from lib import lists
+from lib import dtypes
 
 Dataset = collections.namedtuple("Dataset", ["name", "mats"])
 
@@ -15,18 +15,19 @@ def safe_dir_name(s):
     t = t.lower()
     return t
 
-def mat_is_integer(mat):
-    return mat.name in lists.INTEGER_MATS
+def mat_is_real(mat):
+    val = dtypes.DTYPES[(mat.group, mat.name)] == "real"
+    return val
 
-def filter_reject_integer(mats):
-    return [mat for mat in mats if not mat_is_integer(mat)]
+def filter_keep_real(mats):
+    return [mat for mat in mats if mat_is_real(mat)]
 
 def mat_is_small(mat):
     return (mat.rows < 1_000 and mat.cols < 1_000) \
         or mat.nnz < 20_000
 
 def mat_is_large(mat):
-    return (mat.rows > 1_000_000 and mat.cols < 1_000_000) \
+    return (mat.rows > 1_000_000 and mat.cols > 1_000_000) \
         or mat.nnz > 20_000_000
 
 def filter_reject_large(mats):
@@ -38,7 +39,7 @@ def filter_reject_small(mats):
 ## all real-valued matrices
 REAL_MATS = Dataset(
     name = "reals",
-    mats = filter_reject_integer(ssgetpy.search(
+    mats = filter_keep_real(ssgetpy.search(
         dtype='real',
         limit=1_000_000
     ))
@@ -66,7 +67,7 @@ for kind in kinds:
     )
 REGULAR_REAL_MATS = Dataset(
     name="regular_reals",
-    mats = filter_reject_integer(mats)
+    mats = filter_keep_real(mats)
 )
 
 ## keep "small" matrices
@@ -91,7 +92,7 @@ REAL_MED_MATS = Dataset (
 
 ## export all datasets
 DATASETS  = [
-    REAL_MATS,
+    # REAL_MATS,
     REAL_SMALL_MATS,
     REAL_MED_MATS,
     REGULAR_REAL_MATS,
@@ -114,7 +115,7 @@ for kind in get_kinds():
             name = "kind_"+safe_dir_name(kind),
             mats = filter_reject_large( \
             filter_reject_small( \
-            filter_reject_integer(ssgetpy.search(
+            filter_keep_real(ssgetpy.search(
                 kind=kind,
                 dtype='real',
                 limit=1_000_000

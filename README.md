@@ -39,6 +39,12 @@ This makes use of a [fork of the `ssgetpy`](github.com/cwpearson/ssgetpy) packag
 ssgetpy does not discriminate "real" datatype from "integer" datatype, as shown on the suitesparse collection website.
 Therefore, `lists.py` maintains a manually-curated list of `integer` datatype matrices to facilitate discrimination.
 
+## Transfer data to a different filesystem
+
+```
+rsync -rzvh --links pearson@cori.nersc.gov:$SS_DIR/ .
+```
+
 ## how this was done
 
 ```

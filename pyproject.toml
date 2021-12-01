@@ -5,8 +5,9 @@ description = ""
 authors = ["Carl Pearson <cwpears@sandia.gov>"]
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = ">=3.7,<3.11"
 ssgetpy = {git = "https://github.com/cwpearson/ssgetpy.git", rev = "be00d2a"}
+scipy = "^1.7.3"
 
 [tool.poetry.dev-dependencies]
 
