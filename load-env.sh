@@ -17,5 +17,10 @@ elif [[ "$NERSC_HOST" == perlmutter ]]; then
     which python
     export SS_DIR="$CFS"/m3918/pearson
     echo "\$SS_DIR = $SS_DIR"
+elif [[ `hostname` =~ ascicgpu030 ]]; then
+    echo hostname matched ascicgpu030
+
+    export SS_DIR="$HOME/suitesparse"
+    echo "\$SS_DIR = $SS_DIR"
 fi
 
