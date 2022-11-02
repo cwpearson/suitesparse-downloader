@@ -9,6 +9,10 @@ import scipy.io
 from lib import config
 
 def download_ss_index(path):
+
+    path_dir = path.parent
+    path_dir.mkdir(parents=True, exist_ok=True) 
+
     with open(path, "wb") as f:
         req = requests.get(config.SS_ROOT_URL + "/files/ss_index.mat")
         f.write(req.content)
