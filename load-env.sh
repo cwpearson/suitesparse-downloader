@@ -22,5 +22,10 @@ elif [[ `hostname` =~ ascicgpu030 ]]; then
 
     export SS_DIR="$HOME/suitesparse"
     echo "\$SS_DIR = $SS_DIR"
+elif [[ `hostname` =~ rzvernal ]]; then
+    echo hostname matched rzvernal
+
+    export SS_DIR="/usr/workspace/cwpears/suitesparse"
+    echo "\$SS_DIR = $SS_DIR"
 fi
 
