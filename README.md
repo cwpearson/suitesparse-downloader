@@ -1,22 +1,21 @@
 # ss-downloader
 
-Install poetry & Python 3.8+
-
 ```
-curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -
+pipenv shell
+pip install -r requirements.txt
 ```
 
 ## how to use
 
 ```
 source load-env.sh
-poetry run python list.py
-poetry run python download.py <dataset name>
+python list.py
+python download.py <dataset name>
 ```
 
 To download all datasets
 ```
-poetry run python download.py all
+python download.py all
 ```
 
 You can move the datasets due to relative symlinks. For example:

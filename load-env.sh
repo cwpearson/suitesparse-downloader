@@ -2,6 +2,8 @@
 
 host=`hostname`
 
+
+
 if [[ "$NERSC_HOST" == cori ]]; then
     echo \$NERSC_HOST matched cori
 
@@ -13,8 +15,9 @@ if [[ "$NERSC_HOST" == cori ]]; then
 elif [[ "$NERSC_HOST" == perlmutter ]]; then
     echo \$NERSC_HOST matched perlmutter
 
-    module load cray-python/3.9.4.1
-    which python
+    echo module load cray-python/3.9.13.1
+    module load cray-python/3.9.13.1
+
     export SS_DIR="$CFS"/m3918/pearson
     echo "\$SS_DIR = $SS_DIR"
 elif [[ `hostname` =~ ascicgpu030 ]]; then
